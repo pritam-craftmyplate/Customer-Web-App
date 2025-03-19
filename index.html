@@ -24,10 +24,18 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-    <script
-      async
-      defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOqoJqX1ek1zuw_typKjfzo2KubGwhwzI&libraries=places"
-    ></script>
+    <script>
+      // Dynamically add Google Maps API script
+      const googleMapsApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+      if (googleMapsApiKey) {
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`;
+        script.async = true;
+        script.defer = true;
+        document.body.appendChild(script);
+      } else {
+        console.error("Google Maps API key is missing in .env file.");
+      }
+    </script>
   </body>
 </html>
