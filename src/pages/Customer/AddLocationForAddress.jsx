@@ -9,7 +9,7 @@ import MyLocationRoundedIcon from "@mui/icons-material/MyLocationRounded";
 import { Heading5 } from "../../components/typography/CustomTypography";
 import { useNavigate } from "react-router-dom";
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyCOqoJqX1ek1zuw_typKjfzo2KubGwhwzI";
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const defaultLocation = {
   lat: 17.4339,
   lng: 78.4011,

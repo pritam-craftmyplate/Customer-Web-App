@@ -72,7 +72,7 @@ export default function CustomerFinalPaymentSummery() {
 
   const handlePayment = () => {
     const options = {
-      key: "", // Replace with your Razorpay Test Key
+      key: import.meta.env.VITE_RAZORPAY_KEY, // Replace with your Razorpay Test Key
       amount: 3220000, // Amount in paise (₹32,200)
       currency: "INR",
       name: "Company Name",
