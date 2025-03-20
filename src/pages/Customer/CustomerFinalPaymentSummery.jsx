@@ -147,7 +147,7 @@ export default function CustomerFinalPaymentSummery() {
               textAlign: "start",
             }}
             component="button"
-            onClick={handleToggleDrawer(true)}
+            onClick={()=>navigate("/customer/login")}
           >
             <Typography fontWeight="500">+ Add address</Typography>
           </Paper>

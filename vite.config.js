@@ -62,7 +62,7 @@ export default defineConfig({
       },
     },
     host: "localhost", // Use 'localhost' for local development
-    port: 5171, // Port number for the dev server
+    port: 5173, // Port number for the dev server
     strictPort: true, // Fail if the port is in use
     open: true, // Automatically open the browser
   },

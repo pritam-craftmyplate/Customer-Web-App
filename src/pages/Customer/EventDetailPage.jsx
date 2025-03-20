@@ -1,3 +1,7 @@
+
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -10,84 +14,70 @@ import {
 import HomeIcon from "@mui/icons-material/Home";
 import PaymentIcon from "@mui/icons-material/Payment";
 import RoomServiceIcon from "@mui/icons-material/RoomService";
+
+import LogoSpinner from "../../components/spinner/LogoSpinner.jsx";
 import CMP_Logo from "../../assets/Purple Logo.svg";
 import { buttonColor } from "../../constants/colors";
-import { useNavigate } from "react-router-dom";
-
-const eventDetails = [
-  { label: "Event Type", value: "Birthday Party" },
-  { label: "No.of guests", value: "200" },
-  { label: "Quote", value: "₹20,000" },
-  { label: "Date", value: "20/01/2025" },
-  { label: "Time", value: "06:00 PM" },
-  { label: "Preferences", value: "Veg - 40, Non veg - 160" },
-  { label: "Service type", value: "Delivery box" },
-];
-
-const items = [
-  {
-    category: "Starters",
-    items: [
-      { name: "Veg Manchurian", type: "Veg" },
-      { name: "Paneer 65", type: "Veg" },
-      { name: "Chill Chicken", type: "Non - Veg" },
-    ],
-  },
-  {
-    category: "Biryani",
-    items: [
-      { name: "Paneer Biryani", type: "Veg" },
-      { name: "Chicken Biryani", type: "Non - Veg" },
-      { name: "Mutton Biryani", type: "Non - Veg" },
-    ],
-  },
-  {
-    category: "Curries",
-    items: [
-      { name: "Paneer butter masala", type: "Veg" },
-      { name: "Kadai chicken", type: "Non - Veg" },
-    ],
-  },
-  {
-    category: "Desserts",
-    items: [
-      { name: "Apricot Delight", type: "Veg" },
-      { name: "Rasmalai", type: "Veg" },
-    ],
-  },
-];
+import { getPlattersByGroupIdAsync } from "../../redux/service/platterService.jsx";
 
 export default function EventDetailPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { quoteGroupId, phoneNumber } = useParams();
+
+  // Fetch platters from Redux store
+  const { platters, loading, error } = useSelector((state) => state.platter);
+
+ // console.log("Redux Platters Data:", platters);
+
+  useEffect(() => {
+    if (!quoteGroupId || !phoneNumber) return;
+   // console.log("Dispatching getPlattersByGroupIdAsync...");
+    dispatch(getPlattersByGroupIdAsync({ quoteGroupId, phoneNumber }));
+  }, [dispatch, quoteGroupId, phoneNumber]);
+
+  if (loading) return <LogoSpinner />;
+  if (error) {
+   
+    return <Typography color="error">Failed to fetch event details</Typography>;
+  }
+
+  // Extract data safely
+  const quotationDetails = platters?.[0]?.quotationDetails || {};
+  
+  const eventDetails = [
+    { label: "Event Type", value: quotationDetails?.occassionType || "-" },
+    { label: "No. of guests", value: quotationDetails?.guestCount || "-" },
+    { label: "Quote", value: quotationDetails?.platter?.maxPrice ?? "-" }, 
+    { label: "Date", value: quotationDetails?.eventDate || "-" },
+    { label: "Time", value: quotationDetails?.eventTime || "-" },
+    { label: "Meal Type", value: quotationDetails?.mealType || "-" },
+    { label: "Venue Type", value: quotationDetails?.venueType || "-" },
+  ];
+
   return (
-    <Box sx={{ bgcolor: "#fff", mb:8 }}>
-      <Box
-        sx={{
-          p: 2,
-          bgcolor: buttonColor.primary,
-          color: "#fff",
-          textAlign: "center",
-        }}
-      >
+    <Box sx={{ bgcolor: "#fff", mb: 8 }}>
+      {/* Logo */}
+      <Box sx={{ p: 2, bgcolor: buttonColor.primary, color: "#fff", textAlign: "center" }}>
         <Box component="img" src={CMP_Logo} width={70} />
       </Box>
-      <Box
-        sx={{ p: 2, bgcolor: "#F6EDFF", color: "black", textAlign: "center" }}
-      >
+
+      {/* Event Name */}
+      <Box sx={{ p: 2, bgcolor: "#F6EDFF", color: "black", textAlign: "center" }}>
         <Typography variant="subtitle1" fontWeight="500">
-          Birthday Party Platter
+          {quotationDetails.cartName || "Event Details"}
         </Typography>
       </Box>
+
       <Container>
+        {/* Event Details */}
         <Box mt={2}>
-          <Typography variant="h6" fontWeight="bold">
-            Event Details
-          </Typography>
+          <Typography variant="h6" fontWeight="bold">Event Details</Typography>
           {eventDetails.map((detail, index) => (
             <Stack
+              key={index}
               direction="row"
               justifyContent="space-between"
-              key={index}
               sx={{ borderBottom: "1px solid #eee", py: 1 }}
             >
               <Typography>{detail.label}</Typography>
@@ -96,28 +86,7 @@ export default function EventDetailPage() {
           ))}
         </Box>
 
-        <Box mt={3}>
-          <Typography variant="h6" fontWeight="bold">
-            Items
-          </Typography>
-          {items.map((section, index) => (
-            <Box key={index} mt={2}>
-              <Typography fontWeight="bold">{section.category}</Typography>
-              {section.items.map((item, idx) => (
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  key={idx}
-                  sx={{ borderBottom: "1px solid #eee", py: 1 }}
-                >
-                  <Typography>{item.name}</Typography>
-                  <Typography color="grey">{item.type}</Typography>
-                </Stack>
-              ))}
-            </Box>
-          ))}
-        </Box>
-
+        {/* Pay Now Button */}
         <Box mt={4}>
           <Button
             fullWidth
@@ -134,29 +103,31 @@ export default function EventDetailPage() {
           >
             <Typography variant="body1">Pay Now</Typography>
             <Box textAlign="right">
-              <Typography variant="body1">₹32,200</Typography>
+              <Typography variant="body1">
+                ₹{quotationDetails?.totalPrice ? quotationDetails.totalPrice.toLocaleString() : "32,200"}
+              </Typography>
               <Typography variant="caption">+ Delivery Charges</Typography>
             </Box>
           </Button>
         </Box>
-
       </Container>
 
-        <BottomNavigation
-          showLabels
-          sx={{
-            bottom: 0,
-            width: "100%",
-            display: "flex",
-            position: "fixed",
-            bgcolor: "#f1f1f1f",
-            justifyContent: "space-between",
-          }}
-        >
-          <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-          <BottomNavigationAction label="Payment" icon={<PaymentIcon />} />
-          <BottomNavigationAction label="Services" icon={<RoomServiceIcon />} />
-        </BottomNavigation>
+      {/* Bottom Navigation */}
+      <BottomNavigation
+        showLabels
+        sx={{
+          bottom: 0,
+          width: "100%",
+          position: "fixed",
+          bgcolor: "#f9f9f9",
+          borderTop: "1px solid #ddd",
+          boxShadow: "0px -2px 4px rgba(0,0,0,0.1)",
+        }}
+      >
+        <BottomNavigationAction label="Home" icon={<HomeIcon />} onClick={() => navigate("/")} />
+        <BottomNavigationAction label="Payment" icon={<PaymentIcon />} onClick={() => navigate("/customer/payment-summary")} />
+        <BottomNavigationAction label="Services" icon={<RoomServiceIcon />} onClick={() => navigate("/services")} />
+      </BottomNavigation>
     </Box>
   );
 }

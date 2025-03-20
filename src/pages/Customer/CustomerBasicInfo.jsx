@@ -264,7 +264,7 @@ function CustomerLoginPage() {
               <Button
                 type="button"
                 variant="contained"
-                onClick={() => navigate("/customer/event-details")}
+                onClick={() => navigate("/groupId/:quoteGroupId/:phoneNumber")}
                 sx={{
                   padding: "12px",
                   borderRadius: "10px",

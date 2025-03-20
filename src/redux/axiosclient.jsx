@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-binary-expression */
 import axios from 'axios';
-import { showSnackbar } from '../Utils/snackbarUtil';
+//import { showSnackbar } from '../Utils/snackbarUtil';
 
 // Axios client setup
 const AxiosClient = async ({ toolkit, headers = {}, responseType, ...rest }) => {
@@ -22,7 +22,7 @@ const AxiosClient = async ({ toolkit, headers = {}, responseType, ...rest }) => 
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    showSnackbar(error.response?.data?.message || "Something went wrong!","error",2000)
+   // showSnackbar(error.response?.data?.message || "Something went wrong!","error",2000)
     // toast.error(error.response?.data?.message || 'Something went wrong!', {
     //   position: 'top-right',
     // });
