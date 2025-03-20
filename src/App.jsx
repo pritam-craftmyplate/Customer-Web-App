@@ -70,19 +70,23 @@ const CustomerFinalPaymentSummery = lazy(() => import("./pages/Customer/Customer
 const AddLocationForAddress = lazy(() => import("./pages/Customer/AddLocationForAddress"));
 const EnterFullAddressForm = lazy(() => import("./pages/Customer/EnterFullAddressForm"));
 
+
+
 function App() {
   return (
     <Router>
       <Suspense fallback={<LogoSpinner />}>
         <Routes>
-          <Route path="/" element={<Navigate to="/customer/login" />} />
+        <Route path="/" element={<Navigate to="/groupId/Quotation-023/+918372833221" />} />
+        <Route path="/groupId/:quoteGroupId/:phoneNumber" element={<EventDetailPage />} />
+        <Route path="/customer/payment-summary" element={<CustomerFinalPaymentSummery />} />
           <Route path="/customer/login" element={<CustomerLoginPage />} />
-          <Route path="/customer/basic-info" element={<CustomerBasicInfo />} />
-          <Route path="/customer/event-detail" element={<EventDetailPage />} />
-          <Route path="/customer/payment-summary" element={<CustomerFinalPaymentSummery />} />
+          {/* <Route path="/customer/basic-info" element={<CustomerBasicInfo />} /> */}
+          
           <Route path="/customer/select-address" element={<AddLocationForAddress />} />
           <Route path="/add-address-form" element={<EnterFullAddressForm />} />
-          <Route path="*" element={<Navigate to="/customer/login" />} />
+          <Route path="*" element={<Navigate to="/groupId/:quoteGroupId/:phoneNumber" />} /> 
+          
         </Routes>
       </Suspense>
     </Router>

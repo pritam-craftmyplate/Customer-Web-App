@@ -128,7 +128,7 @@ import { Box, Button, Stack, TextField } from "@mui/material";
              <Button
                  type="button"
                  variant="contained"
-                 onClick={()=>navigate("/customer/basic-info")}
+                 onClick={()=>navigate("/customer/select-address")}
                  sx={{
                    padding: '12px',
                    borderRadius: '10px',
